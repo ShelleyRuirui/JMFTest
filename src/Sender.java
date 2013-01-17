@@ -94,7 +94,7 @@ public class Sender {
 		p.setContentDescriptor(new ContentDescriptor(ContentDescriptor.RAW_RTP));
 		setVideoTrackFormat(p.getTrackControls());		
 		sh.realize(5000);
-		setJPEGQuality(p, 0.5f);
+//		setJPEGQuality(p, 0.5f);
 	}
 	private static void doSomeAudioProcess(Processor p,StateHelper sh) {
 		sh.configure(5000);
@@ -156,17 +156,24 @@ public class Sender {
 		for(TrackControl t:tracks) {
 			if(t.isEnabled()) {
 				Format[] supported = t.getSupportedFormats();
-				Format chosen = null;
-				if(supported.length>0) {
-					if(supported[0] instanceof VideoFormat)
-						chosen = checkForVideoSizes(t.getFormat(),supported[0]);
-					else
-						chosen = supported[0];					
-					t.setFormat(chosen);
-					atLeastOneTrack = true;
-				} else {
-					t.setEnabled(false);
-				}
+				Format chosen = new Format(VideoFormat.H263_RTP);
+				Format format=new VideoFormat(null, 
+		                new Dimension(352, 288), 
+		                Format.NOT_SPECIFIED,
+		                null,
+		                Format.NOT_SPECIFIED).intersects(chosen);
+				t.setFormat(format);
+				atLeastOneTrack = true;
+//				if(supported.length>0) {
+//					if(supported[0] instanceof VideoFormat)
+//						chosen = checkForVideoSizes(t.getFormat(),supported[0]);
+//					else
+//						chosen = supported[0];					
+//					t.setFormat(chosen);
+//					atLeastOneTrack = true;
+//				} else {
+//					t.setEnabled(false);
+//				}
 			} else {
 				t.setEnabled(false);
 			}
